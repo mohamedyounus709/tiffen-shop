@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tiffen Shop Billing App</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+                'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .app-container {
+            min-height: 100vh;
+            width: 100%;
+        }
+
+        /* Home Screen Styles */
+        .home-screen {
+            background: linear-gradient(135deg, #fff7ed 0%, #fefce8 100%);
+            min-height: 100vh;
+            padding: 1rem;
+        }
+
+        .container {
+            max-width: 28rem;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            padding: 2rem 0;
+        }
+
+        .emoji-title {
+            font-size: 2.25rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .shop-title {
+            font-size: 1.875rem;
+            font-weight: bold;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            color: #4b5563;
+        }
+
+        .buttons-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .btn {
+            width: 100%;
+            border: none;
+            border-radius: 0.5rem;
+            padding: 1.5rem 1rem;
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s;
+        }
+
+        .btn:hover {
+            transform: scale(1.02);
+        }
+
+        .btn-green {
+            background-color: #22c55e;
+        }
+
+        .btn-blue {
+            background-color: #3b82f6;
+        }
+
+        .btn-purple {
+            background-color: #a855f7;
+        }
+
+        .btn-sm {
+            padding: 0.75rem 1rem;
+            font-size: 1rem;
+        }
+
+        .btn-text {
+            display: block;
+        }
+
+        .btn-subtext {
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+            opacity: 0.9;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background-color: #ffffff;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            border: 1px solid #e5e7eb;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: #4b5563;
+        }
+
+        .text-green {
+            color: #16a34a;
+        }
+
+        .text-orange {
+            color: #ea580c;
+        }
+
+        /* Admin Screen */
+        .admin-screen {
+            background: linear-gradient(135deg, #eff6ff 0%, #faf5ff 100%);
+            min-height: 100vh;
+            padding: 1rem;
+        }
+
+        .screen-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-card {
+            background-color: #ffffff;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+            border: 1px solid #bfdbfe;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-title {
+            font-size: 1.25rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            color: #1f2937;
+        }
+
+        .photo-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="file"] {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            margin-bottom: 0.75rem;
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .product-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .product-item {
+            background-color: #ffffff;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            border: 1px solid #e5e7eb;
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .product-photo {
+            width: 4rem;
+            height: 4rem;
+            object-fit: cover;
+            border-radius: 0.375rem;
+        }
+
+        .product-info {
+            flex: 1;
+        }
+
+        .product-name {
+            font-weight: bold;
+            color: #1f2937;
+        }
+
+        .product-price {
+            color: #16a34a;
+            font-weight: bold;
+        }
+
+        .delete-btn {
+            background-color: #ef4444;
+            color: white;
+            padding: 0.5rem;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            border: none;
+            font-size: 1rem;
+        }
+
+        .delete-btn:hover {
+            background-color: #dc2626;
+        }
+
+        /* Billing Screen */
+        .billing-screen {
+            background: linear-gradient(135deg, #f0fdf4 0%, #f0fdf4 100%);
+            min-height: 100vh;
+            padding: 1rem;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .product-btn {
+            background-color: #ffffff;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            border: 2px solid #86efac;
+            cursor: pointer;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s;
+        }
+
+        .product-btn:hover {
+            border-color: #22c55e;
+            transform: scale(1.05);
+        }
+
+        .product-btn-photo {
+            width: 100%;
+            height: 5rem;
+            object-fit: cover;
+            border-radius: 0.375rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .product-btn-name {
+            font-weight: bold;
+            color: #1f2937;
+            font-size: 0.875rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .product-btn-price {
+            color: #16a34a;
+            font-weight: bold;
+            font-size: 1.125rem;
+        }
+
+        .bill-card {
+            background-color: #ffffff;
+            border-radius: 0.5rem;
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+            border: 2px solid #4ade80;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .bill-title {
+            font-size: 1.25rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            color: #1f2937;
+        }
+
+        .cart-item {
+            background-color: #f9fafb;
+            padding: 0.75rem;
+            border-radius: 0.375rem;
+            border: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+
+        .cart-item-info {
+            flex: 1;
+        }
+
+        .cart-item-name {
+            font-weight: bold;
+            color: #1f2937;
+        }
+
+        .cart-item-detail {
+            font-size: 0.875rem;
+            color: #4b5563;
+        }
+
+        .quantity-controls {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .qty-btn {
+            background-color: #3b82f6;
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 0.375rem;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .qty-btn-minus {
+            background-color: #ef4444;
+        }
+
+        .qty-display {
+            padding: 0.25rem 0.75rem;
+            font-weight: bold;
+            font-size: 1.125rem;
+            min-width: 24px;
+        }
+
+        .bill-total-section {
+            border-top: 2px solid #d1d5db;
+            padding-top: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .bill-total {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .total-label {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: #1f2937;
+        }
+
+        .total-amount {
+            font-size: 1.875rem;
+            font-weight: bold;
+            color: #16a34a;
+        }
+
+        .bill-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+        }
+
+        /* Reports Screen */
+        .reports-screen {
+            background: linear-gradient(135deg, #faf5ff 0%, #fdf2f8 100%);
+            min-height: 100vh;
+            padding: 1rem;
+        }
+
+        .stats-3col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .stat-card-colored {
+            color: white;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-green {
+            background-color: #22c55e;
+        }
+
+        .stat-orange {
+            background-color: #f97316;
+        }
+
+        .stat-blue {
+            background-color: #3b82f6;
+            grid-column: 1 / -1;
+        }
+
+        .stat-sm-label {
+            font-size: 0.875rem;
+            opacity: 0.9;
+        }
+
+        .stat-lg-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .transaction-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .transaction-item {
+            background-color: #ffffff;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .transaction-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.5rem;
+        }
+
+        .transaction-items {
+            font-size: 0.875rem;
+            color: #4b5563;
+            margin-top: 0.5rem;
+        }
+
+        .transaction-date {
+            font-size: 0.75rem;
+            color: #6b7280;
+        }
+
+        .empty-message {
+            text-align: center;
+            color: #6b7280;
+            padding: 2rem 0;
+            font-size: 1.125rem;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            font-size: 1.25rem;
+            color: #6b7280;
+        }
+    </style>
+</head>
+<body>
+    <div id="root" class="app-container"></div>
+
+    <script>
+        // Simple State Management
+        const app = {
+            mode: 'home',
+            products: [],
+            cart: [],
+            transactions: [],
+            newProduct: { name: '', price: '', photo: null },
+            photoPreview: null,
+
+            init() {
+                this.loadData();
+                this.render();
+                this.attachEventListeners();
+            },
+
+            loadData() {
+                const saved = localStorage.getItem('tiffenProducts');
+                const savedTx = localStorage.getItem('tiffenTransactions');
+                if (saved) this.products = JSON.parse(saved);
+                if (savedTx) this.transactions = JSON.parse(savedTx);
+            },
+
+            saveData() {
+                localStorage.setItem('tiffenProducts', JSON.stringify(this.products));
+                localStorage.setItem('tiffenTransactions', JSON.stringify(this.transactions));
+            },
+
+            render() {
+                const root = document.getElementById('root');
+                
+                if (this.mode === 'home') {
+                    root.innerHTML = this.renderHome();
+                } else if (this.mode === 'admin') {
+                    root.innerHTML = this.renderAdmin();
+                } else if (this.mode === 'billing') {
+                    root.innerHTML = this.renderBilling();
+                } else if (this.mode === 'reports') {
+                    root.innerHTML = this.renderReports();
+                }
+
+                this.attachEventListeners();
+            },
+
+            renderHome() {
+                const stats = this.getStats();
+                return `
+                    <div class="home-screen">
+                        <div class="container">
+                            <div class="header">
+                                <div class="emoji-title">🥘</div>
+                                <div class="shop-title">TIFFEN SHOP</div>
+                                <div class="subtitle">Easy Billing App</div>
+                            </div>
+
+                            <div class="buttons-container">
+                                <button class="btn btn-green" onclick="app.setMode('billing')">
+                                    <span class="btn-text">💵 BILLING NOW</span>
+                                    <span class="btn-subtext">বিল তৈরি করুন</span>
+                                </button>
+                                <button class="btn btn-blue" onclick="app.setMode('admin')">
+                                    <span class="btn-text">➕ ADD ITEMS</span>
+                                    <span class="btn-subtext">নতুন পণ্য যোগ করুন</span>
+                                </button>
+                                <button class="btn btn-purple" onclick="app.setMode('reports')">
+                                    <span class="btn-text">📊 SALES REPORT</span>
+                                    <span class="btn-subtext">বিক্রয় রিপোর্ট</span>
+                                </button>
+                            </div>
+
+                            <div class="stats-grid">
+                                <div class="stat-card">
+                                    <div class="stat-value text-green">₹${stats.totalSales.toFixed(2)}</div>
+                                    <div class="stat-label">Total Sales</div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-value text-orange">${stats.totalItems}</div>
+                                    <div class="stat-label">Items Sold</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+
+            renderAdmin() {
+                const productList = this.products.map(p => `
+                    <div class="product-item">
+                        <img src="${p.photo}" class="product-photo" />
+                        <div class="product-info">
+                            <div class="product-name">${p.name}</div>
+                            <div class="product-price">₹${p.price.toFixed(2)}</div>
+                        </div>
+                        <button class="delete-btn" onclick="app.deleteProduct(${p.id})">🗑️</button>
+                    </div>
+                `).join('');
+
+                const photoPreviewHTML = this.photoPreview ? `<img src="${this.photoPreview}" style="width: 100%; height: 200px; object-fit: cover; border-radius: 0.5rem; margin-bottom: 1rem;" />` : '';
+
+                return `
+                    <div class="admin-screen">
+                        <div class="container">
+                            <div class="screen-header">
+                                <h1 style="font-size: 1.5rem; font-weight: bold; color: #1f2937;">➕ Add Products</h1>
+                                <button class="btn btn-sm" onclick="app.setMode('home')" style="width: auto; background-color: #6b7280; padding: 0.5rem 1rem;">Home</button>
+                            </div>
+
+                            <div class="form-card">
+                                <div class="form-title">📸 নতুন পণ্য যোগ করুন</div>
+                                ${photoPreviewHTML}
+                                
+                                <div class="photo-buttons">
+                                    <button class="btn btn-blue" onclick="document.getElementById('camera').click()">📷 Camera</button>
+                                    <button class="btn btn-purple" onclick="document.getElementById('upload').click()">🖼️ Upload</button>
+                                </div>
+                                
+                                <input type="file" id="camera" accept="image/*" capture="environment" />
+                                <input type="file" id="upload" accept="image/*" />
+                                
+                                <input type="text" id="productName" placeholder="পণ্যের নাম (Name)" />
+                                <input type="number" id="productPrice" placeholder="দাম (Price)" step="0.01" />
+                                
+                                <button class="btn btn-green" style="width: 100%;" onclick="app.addProduct()">✅ Add Product</button>
+                            </div>
+
+                            <h2 style="font-size: 1.25rem; font-weight: bold; margin-bottom: 0.75rem; color: #1f2937;">📦 পণ্য তালিকা</h2>
+                            <div class="product-list">
+                                ${productList || '<div class="empty-message">কোন পণ্য যোগ করা হয়নি</div>'}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+
+            renderBilling() {
+                if (this.products.length === 0) {
+                    return `
+                        <div class="billing-screen">
+                            <div class="container">
+                                <div class="screen-header">
+                                    <h1 style="font-size: 1.5rem; font-weight: bold; color: #1f2937;">💵 BILLING</h1>
+                                    <button class="btn btn-sm" onclick="app.setMode('home')" style="width: auto; background-color: #6b7280; padding: 0.5rem 1rem;">Home</button>
+                                </div>
+                                <div class="empty-message">❌ কোন পণ্য নেই<br><button class="btn btn-blue" onclick="app.setMode('admin')" style="width: 100%; margin-top: 1rem;">➕ পণ্য যোগ করুন</button></div>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                const productButtons = this.products.map(p => `
+                    <button class="product-btn" onclick="app.addToCart(${p.id})">
+                        <img src="${p.photo}" class="product-btn-photo" />
+                        <div class="product-btn-name">${p.name}</div>
+                        <div class="product-btn-price">₹${p.price}</div>
+                    </button>
+                `).join('');
+
+                const cartItems = this.cart.map(item => `
+                    <div class="cart-item">
+                        <div class="cart-item-info">
+                            <div class="cart-item-name">${item.name}</div>
+                            <div class="cart-item-detail">₹${item.price} × ${item.quantity} = ₹${(item.price * item.quantity).toFixed(2)}</div>
+                        </div>
+                        <div class="quantity-controls">
+                            <button class="qty-btn qty-btn-minus" onclick="app.updateQty(${item.id}, ${item.quantity - 1})">−</button>
+                            <span class="qty-display">${item.quantity}</span>
+                            <button class="qty-btn" onclick="app.updateQty(${item.id}, ${item.quantity + 1})">+</button>
+                        </div>
+                    </div>
+                `).join('');
+
+                const total = this.calculateTotal();
+                const cartEmpty = this.cart.length === 0;
+
+                return `
+                    <div class="billing-screen">
+                        <div class="container">
+                            <div class="screen-header">
+                                <h1 style="font-size: 1.5rem; font-weight: bold; color: #1f2937;">💵 BILLING</h1>
+                                <button class="btn btn-sm" onclick="app.setMode('home')" style="width: auto; background-color: #6b7280; padding: 0.5rem 1rem;">Home</button>
+                            </div>
+
+                            <div class="product-grid">
+                                ${productButtons}
+                            </div>
+
+                            <div class="bill-card">
+                                <div class="bill-title">🛒 Bill</div>
+                                ${cartEmpty ? '<div class="empty-message">No items in cart</div>' : `
+                                    <div class="product-list" style="margin-bottom: 1rem;">
+                                        ${cartItems}
+                                    </div>
+                                    <div class="bill-total-section">
+                                        <div class="bill-total">
+                                            <span class="total-label">Total:</span>
+                                            <span class="total-amount">₹${total}</span>
+                                        </div>
+                                    </div>
+                                    <div class="bill-buttons">
+                                        <button class="btn btn-red" style="background-color: #ef4444;" onclick="app.clearCart()">Clear Cart</button>
+                                        <button class="btn btn-green" onclick="app.processPayment()">💳 Pay Now</button>
+                                    </div>
+                                `}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+
+            renderReports() {
+                const stats = this.getStats();
+                const txList = this.transactions.slice().reverse().map(tx => `
+                    <div class="transaction-item">
+                        <div class="transaction-header">
+                            <span>${tx.itemCount} items</span>
+                            <span style="color: #16a34a; font-weight: bold; font-size: 1.125rem;">₹${tx.total.toFixed(2)}</span>
+                        </div>
+                        <div class="transaction-date">${tx.date}</div>
+                        <div class="transaction-items">
+                            ${tx.items.map(i => `${i.name} × ${i.quantity}`).join(', ')}
+                        </div>
+                    </div>
+                `).join('');
+
+                return `
+                    <div class="reports-screen">
+                        <div class="container">
+                            <div class="screen-header">
+                                <h1 style="font-size: 1.5rem; font-weight: bold; color: #1f2937;">📊 Sales Report</h1>
+                                <button class="btn btn-sm" onclick="app.setMode('home')" style="width: auto; background-color: #6b7280; padding: 0.5rem 1rem;">Home</button>
+                            </div>
+
+                            <div class="stats-3col">
+                                <div class="stat-card-colored stat-green">
+                                    <div class="stat-sm-label">Total Revenue</div>
+                                    <div class="stat-lg-value">₹${stats.totalSales.toFixed(2)}</div>
+                                </div>
+                                <div class="stat-card-colored stat-orange">
+                                    <div class="stat-sm-label">Items Sold</div>
+                                    <div class="stat-lg-value">${stats.totalItems}</div>
+                                </div>
+                                <div class="stat-card-colored stat-blue">
+                                    <div class="stat-sm-label">Today's Sales</div>
+                                    <div class="stat-lg-value">₹${stats.todaySales.toFixed(2)}</div>
+                                </div>
+                            </div>
+
+                            <button class="btn btn-purple" style="width: 100%; margin-bottom: 1.5rem;" onclick="app.downloadCSV()">📥 Download CSV Report</button>
+
+                            <h2 style="font-size: 1.25rem; font-weight: bold; margin-bottom: 0.75rem; color: #1f2937;">📋 Recent Transactions</h2>
+                            <div class="transaction-list">
+                                ${txList || '<div class="empty-message">No transactions yet</div>'}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+
+            attachEventListeners() {
+                const cameraInput = document.getElementById('camera');
+                const uploadInput = document.getElementById('upload');
+
+                if (cameraInput) {
+                    cameraInput.addEventListener('change', (e) => this.handlePhotoCapture(e));
+                }
+                if (uploadInput) {
+                    uploadInput.addEventListener('change', (e) => this.handlePhotoCapture(e));
+                }
+            },
+
+            setMode(mode) {
+                this.mode = mode;
+                this.render();
+            },
+
+            handlePhotoCapture(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onloadend = () => {
+                        this.photoPreview = reader.result;
+                        this.newProduct.photo = reader.result;
+                        this.render();
+                        this.attachEventListeners();
+                    };
+                    reader.readAsDataURL(file);
+                }
+            },
+
+            addProduct() {
+                const name = document.getElementById('productName')?.value;
+                const price = document.getElementById('productPrice')?.value;
+
+                if (name && price && this.photoPreview) {
+                    this.products.push({
+                        id: Date.now(),
+                        name,
+                        price: parseFloat(price),
+                        photo: this.photoPreview
+                    });
+                    this.newProduct = { name: '', price: '', photo: null };
+                    this.photoPreview = null;
+                    this.saveData();
+                    alert('✅ Product Added!');
+                    this.render();
+                } else {
+                    alert('❌ Please fill all fields');
+                }
+            },
+
+            deleteProduct(id) {
+                if (confirm('Delete this product?')) {
+                    this.products = this.products.filter(p => p.id !== id);
+                    this.saveData();
+                    this.render();
+                }
+            },
+
+            addToCart(productId) {
+                const product = this.products.find(p => p.id === productId);
+                const existing = this.cart.find(i => i.id === productId);
+
+                if (existing) {
+                    existing.quantity++;
+                } else {
+                    this.cart.push({ ...product, quantity: 1 });
+                }
+                this.render();
+            },
+
+            updateQty(id, qty) {
+                if (qty <= 0) {
+                    this.cart = this.cart.filter(i => i.id !== id);
+                } else {
+                    const item = this.cart.find(i => i.id === id);
+                    if (item) item.quantity = qty;
+                }
+                this.render();
+            },
+
+            clearCart() {
+                this.cart = [];
+                this.render();
+            },
+
+            calculateTotal() {
+                return this.cart.reduce((sum, item) => sum + (item.price * item.quantity), 0).toFixed(2);
+            },
+
+            processPayment() {
+                if (this.cart.length === 0) {
+                    alert('❌ No items in cart');
+                    return;
+                }
+
+                const transaction = {
+                    id: Date.now(),
+                    date: new Date().toLocaleString('en-IN'),
+                    items: this.cart,
+                    total: parseFloat(this.calculateTotal()),
+                    itemCount: this.cart.reduce((sum, i) => sum + i.quantity, 0)
+                };
+
+                this.transactions.push(transaction);
+                this.saveData();
+                alert('✅ Payment Completed!');
+                this.cart = [];
+                this.render();
+            },
+
+            getStats() {
+                const totalSales = this.transactions.reduce((sum, t) => sum + t.total, 0);
+                const totalItems = this.transactions.reduce((sum, t) => sum + t.itemCount, 0);
+                const today = new Date().toDateString();
+                const todaySales = this.transactions
+                    .filter(t => new Date(t.date).toDateString() === today)
+                    .reduce((sum, t) => sum + t.total, 0);
+
+                return { totalSales, totalItems, todaySales };
+            },
+
+            downloadCSV() {
+                if (this.transactions.length === 0) {
+                    alert('❌ No transactions to download');
+                    return;
+                }
+
+                let csv = 'Date,Product,Quantity,Price,Total\n';
+                this.transactions.forEach(tx => {
+                    tx.items.forEach(item => {
+                        csv += `"${tx.date}","${item.name}",${item.quantity},${item.price},${(item.price * item.quantity).toFixed(2)}\n`;
+                    });
+                });
+
+                const element = document.createElement('a');
+                element.setAttribute('href', 'data:text/csv;charset=utf-8,%EF%BB%BF' + encodeURIComponent(csv));
+                element.setAttribute('download', `tiffen_${new Date().toISOString().split('T')[0]}.csv`);
+                element.click();
+            }
+        };
+
+        // Initialize app
+        window.addEventListener('DOMContentLoaded', () => {
+            app.init();
+        });
+    </script>
+</body>
+</html>
